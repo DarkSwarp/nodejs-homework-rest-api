@@ -1,49 +1,93 @@
-const contacts = require("../models/contacts");
-const crypto = require("crypto");
-const contactSchema = require("../schemas/contactsSchemas");
+const Contact = require("../schemas/contactsSchemas");
 
-const getAll = async (req, res, next) => {
-    await contacts
-        .listContacts()
-        .then((data) => res.status(200).json(data))
-        .catch((err) => next(err));
+const getAll = async (__, res, next) => {
+    try {
+        const result = await Contact.find();
+        return res.status(200).json(result);
+    } catch (error) {
+        return next(error);
+    }
 };
 
 const getContactByID = async (req, res, next) => {
-    await contacts
-        .getContactById(req.params.contactId)
-        .then((data) => res.status(200).json(data))
-        .catch(() => res.status(404).json({ message: "Not found" }));
+    try {
+        const result = await Contact.findById(req.params.contactId);
+        if (result === null) {
+            return res.status(404).json({ message: "Not found" });
+        }
+        return res.status(200).json(result);
+    } catch (error) {
+        return next(error);
+    }
 };
 
-const setContacts = async (req, res, next) => {
-    const response = contactSchema.validate(req.body);
-    if (response.error) {
-        return res.status(400).json({ message: "missing required name field" });
-    }
-    const id = crypto.randomUUID();
-    const body = { id, name: req.body.name, email: req.body.email, phone: req.body.phone };
-    await contacts.addContact(body);
+const setContacts = async (req, res) => {
+    try {
+        const contact = {
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone,
+            favorite: req.body.favorite,
+        };
 
-    return res.json(body);
+        const result = await Contact.create(contact);
+        return res.status(201).json(result);
+    } catch (error) {
+        const errorMessage = error.message;
+        return res.status(400).json({ message: errorMessage });
+    }
 };
 
 const deleteContactByID = async (req, res, next) => {
-    await contacts
-        .removeContact(req.params.contactId)
-        .then(() => res.status(200).json({ message: "contact deleted" }))
-        .catch(() => res.status(404).json({ message: "Not found" }));
+    try {
+        const result = await Contact.findByIdAndRemove(req.params.contactId);
+        if (result === null) {
+            return res.status(404).json({ message: "Not found" });
+        }
+        return res.status(200).json({ message: "contact deleted" });
+    } catch (error) {
+        return next(error);
+    }
 };
 
 const changeContactByID = async (req, res, next) => {
-    const response = contactSchema.validate(req.body);
-    if (response.error) {
-        return res.status(400).json({ message: "missing fields" });
+    try {
+        const contact = {
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone,
+            favorite: req.body.favorite,
+        };
+        if (req.body.name === undefined) {
+            return res.status(400).json({ message: "contacts validation failed: name: Set name for contact" });
+        }
+        const result = await Contact.findByIdAndUpdate(req.params.contactId, contact, { new: true });
+        if (result === null) {
+            return res.status(404).json({ message: "Not found" });
+        }
+        return res.status(200).json(result);
+    } catch (error) {
+        return next(error);
     }
-    await contacts
-        .updateContact(req.params.contactId, req.body)
-        .then((data) => res.status(200).json(data))
-        .catch(() => res.status(404).json({ message: "Not found" }));
+};
+
+const changeContact = async (req, res, next) => {
+    try {
+        const contact = {
+            favorite: req.body.favorite,
+        };
+        if (req.body.favorite === undefined) {
+            return res.status(400).json({ message: "missing field favorite" });
+        }
+        const result = await Contact.findByIdAndUpdate(req.params.contactId, contact, { new: true });
+        if (result === null) {
+            return res.status(404).json({ message: "Not found" });
+        }
+        return res.status(200).json(result);
+    } catch (error) {
+        const errorMessage = error.message;
+        return res.status(400).json({ message: errorMessage });
+    }
 };
 
 module.exports = {
@@ -52,4 +96,5 @@ module.exports = {
     setContacts,
     deleteContactByID,
     changeContactByID,
+    changeContact,
 };
