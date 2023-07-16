@@ -1,0 +1,22 @@
+const Contact = require("../schemas/contactsSchemas");
+
+const setContact = async (req, res) => {
+    try {
+        const contact = {
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone,
+            favorite: req.body.favorite,
+        };
+
+        const result = await Contact.create(contact);
+        return res.status(201).json(result);
+    } catch (error) {
+        const errorMessage = error.message;
+        return res.status(400).json({ message: errorMessage });
+    }
+};
+
+module.exports = {
+    setContact,
+};

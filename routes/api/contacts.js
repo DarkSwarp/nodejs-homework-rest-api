@@ -1,13 +1,13 @@
 const express = require("express");
-const contacts = require("../../controllers/contactsControllers");
+const contacts = require("../../controllers/index");
 
 const router = express.Router();
 
-router.get("/", contacts.getAll);
+router.get("/", contacts.getAllContacts);
 
 router.get("/:contactId", contacts.getContactByID);
 
-router.post("/", contacts.setContacts);
+router.post("/", contacts.setContact);
 
 router.delete("/:contactId", contacts.deleteContactByID);
 
