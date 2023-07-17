@@ -8,6 +8,7 @@ const { createUser } = require("./register");
 const { login } = require("./login");
 const { logOut } = require("./logout");
 const { currentUser } = require("./currentUser");
+const { subscription } = require("./subscription");
 
 module.exports = {
     getAllContacts,
@@ -20,4 +21,5 @@ module.exports = {
     login,
     logOut,
     currentUser,
+    subscription,
 };
