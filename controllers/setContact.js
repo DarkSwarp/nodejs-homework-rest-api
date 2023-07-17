@@ -1,4 +1,4 @@
-const Contact = require("../schemas/contactsSchemas");
+const { Contact } = require("../schemas/index");
 
 const setContact = async (req, res) => {
     try {
@@ -7,6 +7,7 @@ const setContact = async (req, res) => {
             email: req.body.email,
             phone: req.body.phone,
             favorite: req.body.favorite,
+            owner: req.user.id,
         };
 
         const result = await Contact.create(contact);

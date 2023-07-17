@@ -1,8 +1,8 @@
-const Contact = require("../schemas/contactsSchemas");
+const { Contact } = require("../schemas/index");
 
-const getAllContacts = async (__, res, next) => {
+const getAllContacts = async (req, res, next) => {
     try {
-        const result = await Contact.find();
+        const result = await Contact.find({owner: req.user.id});
         return res.status(200).json(result);
     } catch (error) {
         return next(error);
