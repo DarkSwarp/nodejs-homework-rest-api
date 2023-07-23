@@ -2,9 +2,6 @@ const { Users } = require("../schemas/index");
 
 const subscription = async (req, res, next) => {
     try {
-        const userSubscription = {
-            subscription: req.body.subscription,
-        };
         if (req.body.subscription === undefined) {
             return res.status(400).json({ message: "missing field subscription" });
         }

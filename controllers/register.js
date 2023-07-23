@@ -1,5 +1,6 @@
 const { Users } = require("../schemas/index");
 const bcrypt = require("bcrypt");
+const gravatar = require("gravatar");
 
 const createUser = async (req, res) => {
     try {
@@ -12,8 +13,8 @@ const createUser = async (req, res) => {
         }
 
         const passwordHash = await bcrypt.hash(password, 10);
-
-        const result = await Users.create({ password: passwordHash, email, subscription });
+        const avatarURL = gravatar.url(email);
+        const result = await Users.create({ password: passwordHash, email, subscription, avatarURL });
         return res.status(201).json({ message: `user: {email: ${result.email}, subscription: ${result.subscription}}` });
     } catch (error) {
         const errorMessage = error.message;

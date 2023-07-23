@@ -21,9 +21,9 @@ const login = async (req, res) => {
 
         const token = jwt.sign({ id: user._id }, JWT_SECRET);
 
-       await Users.findOneAndUpdate({ _id: user._id }, { $set: { token } });
+       const result =  await Users.findOneAndUpdate({ _id: user._id }, { $set: { token } }).select({_id:0, email:1, subscription:1});
 
-        return res.status(200).json({ message: `user: {email: ${user.email}, subscription: ${user.subscription}}` });
+        return res.status(200).json(result);
     } catch (error) {
         const errorMessage = error.message;
         return res.status(400).json({ message: errorMessage });
