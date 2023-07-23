@@ -1,8 +1,8 @@
-const {Contact} = require("../schemas/index");
+const { Contact } = require("../schemas/index");
 
 const deleteContactByID = async (req, res, next) => {
     try {
-        const result = await Contact.findByIdAndRemove(req.params.contactId);
+        const result = await Contact.findOneAndDelete({ _id: req.params.contactId, owner: req.user.id });
         if (result === null) {
             return res.status(404).json({ message: "Not found" });
         }

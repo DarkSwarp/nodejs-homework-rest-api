@@ -15,7 +15,10 @@ const schema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    owner: {
+        type: mongoose.Types.ObjectId,
+        ref: "users",
+    },
 });
 
-module.exports = mongoose.model("contacts", schema)
-
+module.exports = mongoose.model("contacts", schema);
