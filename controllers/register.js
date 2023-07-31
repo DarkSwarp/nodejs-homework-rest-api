@@ -2,7 +2,7 @@ const { Users } = require("../schemas/index");
 const bcrypt = require("bcrypt");
 const gravatar = require("gravatar");
 const crypto = require("crypto");
-const { sendEmail } = require("./email");
+const { sendEmail } = require("../services/email");
 
 const createUser = async (req, res) => {
     try {
