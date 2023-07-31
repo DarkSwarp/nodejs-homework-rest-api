@@ -19,6 +19,10 @@ const login = async (req, res) => {
             return res.status(401).json({ message: "Email or password is wrong" });
         }
 
+        if (!user.verify) {
+            return res.status(401).json({ message: "Verification failed" });
+        }
+
         const token = jwt.sign({ id: user._id }, JWT_SECRET);
 
        const result =  await Users.findOneAndUpdate({ _id: user._id }, { $set: { token } }).select({_id:0, email:1, subscription:1});

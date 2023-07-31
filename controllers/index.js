@@ -10,6 +10,8 @@ const { logOut } = require("./logout");
 const { currentUser } = require("./currentUser");
 const { subscription } = require("./subscription");
 const { avatar } = require("./avatar");
+const { verificationToken } = require("./verificationToken");
+const { getVerificationEmail } = require("./getVerificationEmail");
 
 module.exports = {
     getAllContacts,
@@ -24,4 +26,6 @@ module.exports = {
     currentUser,
     subscription,
     avatar,
+    verificationToken,
+    getVerificationEmail,
 };
